@@ -1,4 +1,6 @@
-
+export function generateStaticParams() {
+  return [{ orgId: "demo" }];
+}
 import DashboardShell from "@/components/layout/DashboardShell";
 
 export default async function OrganizationDashboard({
