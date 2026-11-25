@@ -3,6 +3,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { isValidEmail } from "@/lib/validation";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
 import {
   ShieldCheck,
   Building2,
@@ -47,7 +51,7 @@ export default function LoginPage() {
   function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!isValidEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
@@ -73,23 +77,25 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold text-[var(--foreground)]">
             WorkSphere
           </h1>
+
           <p className="mt-2 text-sm text-[var(--muted)]">
             Sign in to your workspace
           </p>
         </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-[var(--foreground)]">
-            Email address
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-3 text-[var(--foreground)] outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        <Input
+          id="email"
+          label="Email address"
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError("");
+          }}
+          placeholder="you@example.com"
+          error={error}
+          required
+        />
 
         <div>
           <label className="mb-2 block text-sm font-medium text-[var(--foreground)]">
@@ -116,7 +122,9 @@ export default function LoginPage() {
                     checked={role === item.value}
                     onChange={(e) => setRole(e.target.value)}
                   />
+
                   <Icon size={19} />
+
                   <span className="text-sm text-[var(--foreground)]">
                     {item.label}
                   </span>
@@ -126,18 +134,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-500" role="alert">
-            {error}
-          </p>
-        )}
-
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white hover:bg-indigo-700"
-        >
+        <Button type="submit" className="w-full">
           Continue
-        </button>
+        </Button>
 
         <p className="text-center text-xs text-[var(--muted)]">
           Demo login · No password required

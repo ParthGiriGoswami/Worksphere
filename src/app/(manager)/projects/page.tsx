@@ -1,5 +1,6 @@
 
 import DashboardShell from "@/components/layout/DashboardShell";
+import CreateProjectForm from "@/features/project-manager/CreateProjectForm";
 
 export default function ProjectManagerDashboard() {
   return (
@@ -23,6 +24,14 @@ export default function ProjectManagerDashboard() {
           <p className="mt-3 text-3xl font-bold">28</p>
         </div>
       </div>
+
+      <section className="mt-8 rounded-xl border border-[var(--border)] bg-[var(--sidebar)] p-6">
+        <h3 className="mb-6 text-xl font-semibold">
+          Create New Project
+        </h3>
+
+        <CreateProjectForm />
+      </section>
     </DashboardShell>
   );
 }
