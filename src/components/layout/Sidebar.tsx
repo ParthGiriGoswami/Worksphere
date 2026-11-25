@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { RefObject } from "react";
@@ -17,6 +16,7 @@ interface SidebarProps {
   onClose: () => void;
   role: UserRole;
   sidebarRef: RefObject<HTMLElement | null>;
+  inert: boolean;
 }
 
 export default function Sidebar({
@@ -24,13 +24,14 @@ export default function Sidebar({
   onClose,
   role,
   sidebarRef,
+  inert,
 }: SidebarProps) {
   const pathname = usePathname();
   const navigation = navigationConfig[role];
+  const dashboardHref = navigation[0]?.href ?? "/login";
 
   return (
     <>
-      {/* Mobile backdrop */}
       {open && (
         <button
           type="button"
@@ -40,20 +41,21 @@ export default function Sidebar({
         />
       )}
 
-      {/* Sidebar */}
       <aside
         ref={sidebarRef}
         id="main-sidebar"
         aria-label="Main navigation"
+        inert={inert}
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] transition-transform duration-300 lg:static lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--border)] px-6">
           <Link
-            href="/login"
-            className="text-xl font-bold text-indigo-600"
+            href={dashboardHref}
+            onClick={onClose}
+            className="text-xl font-bold text-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            aria-label="WorkSphere dashboard"
           >
             WorkSphere
           </Link>
@@ -68,30 +70,22 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Workspace information */}
         <div className="border-b border-[var(--border)] px-5 py-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
             Workspace
           </p>
-
           <p className="mt-1 text-sm font-medium text-[var(--foreground)]">
             {roleLabels[role]}
           </p>
         </div>
 
-        {/* Navigation links */}
         <nav
           className="flex-1 space-y-2 overflow-y-auto p-4"
           aria-label="Workspace navigation"
         >
           {navigation.map((item) => {
             const Icon = item.icon;
-
-            const active =
-              pathname === item.href ||
-              (item.href !== "/platform" &&
-                item.href !== "/projects" &&
-                pathname.startsWith(item.href + "/"));
+            const active = pathname === item.href;
 
             return (
               <Link
@@ -105,14 +99,13 @@ export default function Sidebar({
                     : "text-[var(--muted)] hover:bg-slate-100 dark:hover:bg-slate-700"
                 }`}
               >
-                <Icon size={19} aria-hidden="true" />
+                <Icon size={19} aria-hidden={true} />
                 <span>{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* Footer */}
         <div className="shrink-0 border-t border-[var(--border)] p-4 text-xs text-[var(--muted)]">
           WorkSphere © 2026
         </div>

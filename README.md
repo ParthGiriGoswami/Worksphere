@@ -1,123 +1,129 @@
+# WorkSphere — Assessment 01
 
-# WorkSphere
+WorkSphere is a responsive, multi-role project and organization management **frontend demo** built with Next.js App Router, TypeScript, and Tailwind CSS.
 
-A multi-role project and organization management platform built using Next.js.
+Assessment 01 focuses on the frontend foundation: route organization, reusable UI, responsive dashboards, form validation, accessible navigation patterns, and automated tests.
 
-## Overview
+> **Scope note:** This assessment uses static sample data and a browser-session demo role selector. It does not implement production authentication, server-side authorization, a database, or persistent project creation. Those are intentionally deferred to later assessments.
 
-WorkSphere is a responsive web application designed to support four user roles:
+## Roles and routes
 
-- Platform Administrator
-- Organization Owner
-- Project Manager
-- Member
+| Role | Dashboard | Additional pages |
+|---|---|---|
+| Platform Administrator | `/platform` | `/platform/organizations`, `/platform/users`, `/platform/projects`, `/platform/settings` |
+| Organization Owner | `/org/demo` | `/org/demo/members`, `/org/demo/projects`, `/org/demo/reports`, `/org/demo/settings` |
+| Project Manager | `/projects` | `/projects/list`, `/projects/tasks`, `/projects/team` |
+| Member | `/my-work` | `/my-work/tasks`, `/my-work/projects`, `/my-work/profile` |
 
-Each role has its own navigation and dashboard experience.
+The `/login` page lets a reviewer choose a demo role. Each role route group has a layout containing `RoleGuard`. A missing session is redirected to `/login`; a mismatched role is redirected to that role's dashboard.
 
-## Technology Stack
+**Security limitation:** `sessionStorage` and a client-side route guard are demonstration controls only. They can be changed by a user and do not protect data or APIs. Production authorization must be enforced by trusted server-side code and the backend.
 
-- Next.js 16 (App Router)
-- TypeScript
-- Tailwind CSS
-- Lucide React
-- next-themes
-- PostgreSQL (planned)
-- Prisma (planned)
-- Authentication and authorization (planned)
+## Technology
 
-## Features
+- Next.js 16 App Router
+- React 19
+- TypeScript (strict mode)
+- Tailwind CSS 4
+- Lucide React icons
+- `next-themes` for light/dark theme switching
+- Vitest, React Testing Library, and jsdom for component and behavior tests
 
-### Implemented
+## Requirements
 
-- Responsive dashboard layout
-- Role-specific navigation configuration
-- Four role-specific dashboard pages
-- Reusable sidebar and header
-- Dark and light theme switching
-- Persistent theme preference
+- Node.js version supported by the installed Next.js release (Node.js 20.9 or later)
+- npm
 
-### Planned
+## Run locally (Windows PowerShell)
 
-- User authentication
-- Server-side role-based authorization
-- Organization management
-- Project management
-- Task management
-- Database integration
-- Input validation
-- Automated testing
+1. Extract the project ZIP.
+2. Open PowerShell in the `Worksphere` folder.
+3. Install dependencies:
 
-## Project Structure
+   ```powershell
+   npm ci
+   ```
+
+4. Start the development server:
+
+   ```powershell
+   npm run dev
+   ```
+
+5. Open `http://localhost:3000`. The root route redirects to `/login`.
+6. Enter a valid email, select one of the four demo roles, and choose **Continue**.
+
+No environment variables or database are required to run the Assessment 01 frontend.
+
+## Available commands
+
+```powershell
+npm run dev
+npm run lint
+npx tsc --noEmit
+npm run test:run
+npm run build
+npm run start
+```
+
+Run `npm run build` before `npm run start`.
+
+## Project structure
 
 ```text
 src/
 ├── app/
-│   ├── (auth)/
-│   ├── (platform)/
-│   ├── (organization)/
-│   ├── (manager)/
-│   └── (member)/
+│   ├── (auth)/login/                 # Demo role selection
+│   ├── (platform)/                   # Platform administrator routes/layout
+│   ├── (organization)/               # Organization owner routes/layout
+│   ├── (manager)/                    # Project manager routes/layout
+│   ├── (member)/                     # Member routes/layout
+│   ├── globals.css
+│   ├── layout.tsx                    # Root layout and theme provider
+│   └── page.tsx                      # Redirects to /login
 ├── components/
-│   ├── layout/
-│   ├── forms/
-│   └── ui/
-├── features/
-│   ├── auth/
-│   ├── platform-admin/
-│   ├── organization/
-│   ├── project-manager/
-│   └── member/
-├── config/
-├── constants/
-├── hooks/
-├── lib/
-├── services/
-└── types/
+│   ├── forms/                        # Shared form building blocks
+│   ├── layout/                       # Dashboard shell, header, sidebar, theme
+│   ├── providers/                    # Theme provider
+│   ├── shared/                       # Demo pages and RoleGuard
+│   └── ui/                            # Button, Input, Select
+├── config/                            # Role navigation and demo page data
+├── features/project-manager/          # Create project demo form
+├── lib/                               # Validation and demo session utilities
+└── test/                              # Test setup
+docs/
+├── ARCHITECTURE_DECISIONS.md
+├── ASSESSMENT_01_CHECKLIST.md
+└── MANUAL_TEST_PLAN.md
 ```
 
-## Installation
+## Implemented features
 
-Clone the repository:
+- Four role-specific dashboard experiences and route groups.
+- Shared dashboard shell, responsive sidebar, header, and theme control.
+- Reusable Button, Input, Select, and form field components.
+- Email, required-field, and minimum-length validation.
+- Accessible form labels, error announcements, navigation labels, active-page indication, keyboard focus styles, and mobile menu Escape handling.
+- Demo role session storage, role guard, and logout cleanup.
+- Static sample management pages for platform, organization, project manager, and member views.
+- Automated tests for UI components, navigation configuration, form validation, demo sessions, login flow, role guard behavior, and failure paths.
 
-```bash
-git clone YOUR_REPOSITORY_URL
-cd worksphere
-```
+## Demo behavior and limitations
 
-Install dependencies:
+- The login page accepts an email and a selected role; there is no password or identity verification.
+- Dashboard records are hard-coded sample data.
+- The create-project form validates the fields and displays a demo confirmation; it does not persist a project.
+- Search and notifications are visual demo elements.
+- The organization route currently uses the sample organization ID `demo`.
+- A role guard is not a substitute for server-side access control.
+- No database, API-backed CRUD, password reset, invitation flow, or real user account management is included in this assessment.
 
-```bash
-npm install
-```
+## Assessment documentation
 
-Create your local environment file:
+- [Architecture decisions](docs/ARCHITECTURE_DECISIONS.md)
+- [Assessment 01 completion checklist](docs/ASSESSMENT_01_CHECKLIST.md)
+- [Manual verification and screenshot plan](docs/MANUAL_TEST_PLAN.md)
 
-```bash
-cp .env.example .env.local
-```
+## Test reporting
 
-Configure the required environment variables.
-
-Start development:
-
-```bash
-npm run dev
-```
-
-Open http://localhost:3000.
-
-## Development Commands
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npx tsc --noEmit
-```
-
-## Current Status
-
-Stage 1: Frontend architecture and foundation.
-
-Backend integration, authentication, authorization, and automated testing are planned for subsequent development stages.
+Run the commands above in the project environment and record the actual output in your submission. Do not represent a test as passing unless it has been run against the final extracted project version.

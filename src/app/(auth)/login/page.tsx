@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { isValidEmail } from "@/lib/validation";
+import { saveDemoSession } from "@/lib/demo-auth";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
@@ -39,7 +40,7 @@ const roles = [
     icon: User,
     route: "/my-work",
   },
-];
+] as const;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,6 +65,12 @@ export default function LoginPage() {
     }
 
     setError("");
+
+    saveDemoSession({
+      email: email.trim(),
+      role: selectedRole.value,
+    });
+
     router.push(selectedRole.route);
   }
 
@@ -97,10 +104,10 @@ export default function LoginPage() {
           required
         />
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-[var(--foreground)]">
+        <fieldset>
+          <legend className="mb-2 block text-sm font-medium text-[var(--foreground)]">
             Select your role
-          </label>
+          </legend>
 
           <div className="space-y-2">
             {roles.map((item) => {
@@ -123,7 +130,7 @@ export default function LoginPage() {
                     onChange={(e) => setRole(e.target.value)}
                   />
 
-                  <Icon size={19} />
+                  <Icon size={19} aria-hidden="true" />
 
                   <span className="text-sm text-[var(--foreground)]">
                     {item.label}
@@ -132,7 +139,7 @@ export default function LoginPage() {
               );
             })}
           </div>
-        </div>
+        </fieldset>
 
         <Button type="submit" className="w-full">
           Continue

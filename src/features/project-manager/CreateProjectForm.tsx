@@ -55,7 +55,7 @@ export default function CreateProjectForm() {
 
     console.log("Created project:", project);
 
-    setSuccess("Project created successfully!");
+    setSuccess("Project details validated. Demo mode does not save this project.");
 
     setName("");
     setDescription("");
